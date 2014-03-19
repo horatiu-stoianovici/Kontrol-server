@@ -24,11 +24,11 @@ namespace Kontrol.Components
             }
         }
 
-        public List<Commands.Command> Commands
+        public List<Commands.ICommand> Commands
         {
             get
             {
-                return new List<Command>
+                return new List<ICommand>
                 {
                     new LoginCommand(),
                     new MouseMoveCommand(),

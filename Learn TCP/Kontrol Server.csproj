@@ -71,14 +71,19 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
+    <Reference Include="WindowsInput">
+      <HintPath>..\packages\InputSimulator.1.0.4.0\lib\net20\WindowsInput.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\KeyboardCommand.cs" />
     <Compile Include="Commands\ScrollCommand.cs" />
     <Compile Include="Commands\MouseClickCommand.cs" />
     <Compile Include="Commands\MouseMoveCommand.cs" />
     <Compile Include="Components\IKontrolRunnerConfig.cs" />
     <Compile Include="Components\KontrolRunner.cs" />
     <Compile Include="Components\KontrolRunnerDefaultConfig.cs" />
+    <Compile Include="Controllers\KeyboardController.cs" />
     <Compile Include="Controllers\MouseController.cs" />
     <Compile Include="Components\Host.cs" />
     <Compile Include="Commands\LoginCommand.cs" />
@@ -102,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

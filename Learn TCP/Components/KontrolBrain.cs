@@ -24,7 +24,7 @@ namespace Kontrol.Components
             }
         }
 
-        private Dictionary<string, Command> commands = new Dictionary<string, Command>();
+        private Dictionary<string, ICommand> commands = new Dictionary<string, ICommand>();
 
         /// <summary>
         /// Creates the request object from the received input (the input can be received from anywhere)
@@ -61,6 +61,7 @@ namespace Kontrol.Components
 
                 if (!found)
                 {
+                    Console.WriteLine(Encoding.ASCII.GetString(receivedBytes, 0, amountOfReceivedBytes));
                     response.StatusCode = TCPStatusCodes.NotFound;
                     response.Write("The command you requested does not exist");
                 }
@@ -69,7 +70,7 @@ namespace Kontrol.Components
             return response;
         }
 
-        public void AddCommand(Command command)
+        public void AddCommand(ICommand command)
         {
             commands.Add(command.GetCommandName(), command);
         }

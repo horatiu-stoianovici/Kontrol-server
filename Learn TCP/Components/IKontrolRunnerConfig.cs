@@ -17,6 +17,6 @@ namespace Kontrol.Components
         /// <summary>
         /// The commands that can be executed
         /// </summary>
-        List<Command> Commands { get; }
+        List<ICommand> Commands { get; }
     }
 }

@@ -15,7 +15,7 @@ namespace Kontrol.Commands
         RightClickUp = 3
     }
 
-    public class MouseClickCommand : Command
+    public class MouseClickCommand : ICommand
     {
         public Response HandleRequest(Request request)
         {

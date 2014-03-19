@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Kontrol.Commands
 {
-    public class LoginCommand : Command
+    public class LoginCommand : ICommand
     {
         public string GetCommandName()
         {

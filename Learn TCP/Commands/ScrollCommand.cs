@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Kontrol.Commands
 {
-    public class ScrollCommand : Command
+    public class ScrollCommand : ICommand
     {
         public Response HandleRequest(Request request)
         {

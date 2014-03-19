@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Kontrol.Commands
 {
-    public interface Command
+    public interface ICommand
     {
         Response HandleRequest(Request request);
 

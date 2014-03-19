@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Kontrol.Commands
 {
-    public class MouseMoveCommand : Command
+    public class MouseMoveCommand : ICommand
     {
         private string currentTouchUid = "";
         private Point clientStartPoint, serverStartPoint;
