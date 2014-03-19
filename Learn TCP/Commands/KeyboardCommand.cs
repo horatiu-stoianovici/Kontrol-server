@@ -1,4 +1,5 @@
 ﻿using Kontrol.Components;
+using Kontrol.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,9 @@ namespace Kontrol.Commands
     {
         public Response HandleRequest(Request request)
         {
-            throw new NotImplementedException();
+            KeyboardController.PressKey(Convert.ToInt32(request.RequestedParameters[0]));
+
+            return new Response(TCPStatusCodes.Ok);
         }
 
         public string GetCommandName()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using WindowsInput;
+using WindowsInput.Native;
 
 namespace Kontrol.Controllers
 {
@@ -12,7 +13,18 @@ namespace Kontrol.Controllers
 
         public static void PressKey(int keyCode)
         {
-            input.Keyboard.TextEntry((char)keyCode);
+            if (keyCode == 8)
+            {
+                input.Keyboard.KeyPress(VirtualKeyCode.BACK);
+            }
+            else if (keyCode == 13)
+            {
+                input.Keyboard.KeyPress(VirtualKeyCode.RETURN);
+            }
+            else
+            {
+                input.Keyboard.TextEntry((char)keyCode);
+            }
         }
     }
 }
