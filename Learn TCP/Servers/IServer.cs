@@ -10,5 +10,7 @@ namespace Kontrol.Servers
         void Run();
 
         void Stop();
+
+        bool LogRequests { get; set; }
     }
 }

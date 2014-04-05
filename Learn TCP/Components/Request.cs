@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Web.Helpers;
 
 namespace Kontrol.Components
 {
@@ -14,8 +15,20 @@ namespace Kontrol.Components
     public class Request
     {
         private string _requestText;
-        private List<string> splitted;
         private EndPoint theEndPoint;
+        private String macAddress;
+        private List<String> parameters;
+        private String commandName;
+
+        /// <summary>
+        /// Helper class to pass json data
+        /// </summary>
+        private struct JsonDataHolder
+        {
+            public string MACAddress;
+            public List<string> Parameters;
+            public string CommandName;
+        }
 
         /// <summary>
         /// Creates a TCP Request object
@@ -29,12 +42,22 @@ namespace Kontrol.Components
         public Request(byte[] receivedBytes, int nrOfReceivedBytes, EndPoint endPoint, out Status status)
         {
             _requestText = Encoding.ASCII.GetString(receivedBytes, 0, nrOfReceivedBytes).Trim();
-            splitted = new List<string>(_requestText.Split('~'));
-            theEndPoint = endPoint;
 
-            if (!isValid())
+            try
+            {
+                JsonDataHolder req = Json.Decode<JsonDataHolder>(_requestText);
+
+                macAddress = req.MACAddress;
+                parameters = new List<String>(req.Parameters);
+                commandName = req.CommandName;
+            }
+            catch (Exception e)
+            {
                 status = Status.InvalidFormat;
-            else if (!isAuthorised())
+                return;
+            }
+
+            if (!isAuthorised())
                 status = Status.TCPAuthorizationFailed;
             else
             {
@@ -45,8 +68,11 @@ namespace Kontrol.Components
         internal Request(byte[] receivedBytes, int nrOfReceivedBytes, EndPoint endPoint)
         {
             _requestText = Encoding.ASCII.GetString(receivedBytes, 0, nrOfReceivedBytes);
-            splitted = new List<string>(_requestText.Split('~'));
-            theEndPoint = endPoint;
+            dynamic req = Json.Decode(_requestText);
+
+            macAddress = req.MACAddress;
+            parameters = req.Parameters;
+            commandName = req.CommandName;
         }
 
         /// <summary>
@@ -67,7 +93,7 @@ namespace Kontrol.Components
         {
             get
             {
-                return splitted[0];
+                return commandName;
             }
         }
 
@@ -78,15 +104,15 @@ namespace Kontrol.Components
         {
             get
             {
-                return splitted.GetRange(2, splitted.Count - 2);
+                return parameters;
             }
         }
 
-        internal string AuthToken
+        internal string MACAddress
         {
             get
             {
-                return splitted[1];
+                return macAddress;
             }
         }
 
@@ -98,31 +124,17 @@ namespace Kontrol.Components
         {
             if (RequestedCommandName.ToUpper() != "AUTHORIZE")
             {
-                bool auth = SecurityManager.IsAuthorized(AuthToken, theEndPoint as IPEndPoint);
+                bool auth = SecurityManager.IsAuthorized(macAddress);
                 if (!auth)
-                    Log.Info("Security", "Attepmpt to execute a command without being authorized from ip " + ClientEndPoint.Address.ToString());
+                    Log.Info("Security", "Attepmpt to execute a command without being authorized from ip " + ClientEndPoint.Address.ToString() + " with mac " + macAddress);
                 return auth;
             }
             return true;
         }
 
         /// <summary>
-        /// If the request is in a valid format
+        /// The ip address of the client
         /// </summary>
-        /// <returns>true if it is in valid format; false if it is not</returns>
-        private bool isValid()
-        {
-            if (splitted[0].ToUpper().Trim() == "AUTHORIZE")
-            {
-                return splitted.Count == 2;
-            }
-            else
-            {
-                Guid guid;
-                return splitted.Count >= 2 && Guid.TryParse(splitted[1].ToLower().Trim(), out guid);
-            }
-        }
-
         public IPEndPoint ClientEndPoint
         {
             get

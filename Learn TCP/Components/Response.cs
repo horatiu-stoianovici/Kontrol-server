@@ -1,14 +1,13 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web.Helpers;
 
 namespace Kontrol.Components
 {
     public class Response
     {
-        private Dictionary<string, object> responseDict = new Dictionary<string, object>();
         private StringBuilder responseContent = new StringBuilder();
 
         public TCPStatusCodes StatusCode { get; set; }
@@ -25,24 +24,27 @@ namespace Kontrol.Components
 
         public Response(TCPStatusCodes code, string content)
         {
-            responseDict = new Dictionary<string, object>
-            {
-                {"status-code", (int)code},
-                {"content", content}
-            };
             StatusCode = code;
         }
 
-        public void Write(string p)
+        /// <summary>
+        /// Writes content to the response
+        /// </summary>
+        public void Write(string content)
         {
-            responseContent.Append(p);
+            responseContent.Append(content);
         }
 
+        /// <summary>
+        /// Get string representation of the response (JSON)
+        /// </summary>
         public override string ToString()
         {
-            responseDict["content"] = responseContent.ToString();
-            responseDict["status-code"] = (int)StatusCode;
-            return JsonConvert.SerializeObject(responseDict);
+            return Json.Encode(new
+            {
+                StatusCode = (int)StatusCode,
+                Content = responseContent.ToString()
+            });
         }
     }
 

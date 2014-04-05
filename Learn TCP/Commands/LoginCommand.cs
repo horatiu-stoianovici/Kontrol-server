@@ -18,23 +18,23 @@ namespace Kontrol.Commands
 
         public Response HandleRequest(Request request)
         {
-            bool success;
             Response response = new Response();
             response.StatusCode = TCPStatusCodes.Ok;
 
-            Guid authToken = SecurityManager.AuthorizeClient(request.AuthToken, request.ClientEndPoint, out success);
-
-            if (!success)
+            if (!SecurityManager.IsAuthorized(request.MACAddress))
             {
+                //TODO: remove this in release
+                SecurityManager.AuthorizeClient(request.MACAddress);
+                response.StatusCode = TCPStatusCodes.Ok;
+                Log.Info("Security", "Use authorised successfully with MAC " + request.MACAddress);
+                return response;
                 response.StatusCode = TCPStatusCodes.NotAuthorized;
-                response.Write("wrong password");
-                Log.Info("Security", "Authorization attempt failed from ip " + request.ClientEndPoint.Address.ToString());
+                Log.Info("Security", "Authorization attempt failed from MAC " + request.MACAddress);
             }
             else
             {
                 response.StatusCode = TCPStatusCodes.Ok;
-                response.Write(authToken.ToString());
-                Log.Info("Security", "Use authorised successfully from ip " + request.ClientEndPoint.Address.ToString());
+                Log.Info("Security", "Use authorised successfully from MAC " + request.MACAddress);
             }
 
             return response;

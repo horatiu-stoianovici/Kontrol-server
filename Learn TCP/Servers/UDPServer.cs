@@ -39,25 +39,40 @@ namespace Kontrol.Servers
         private void startServer()
         {
             UdpClient udpc = new UdpClient(PORT);
-
             Log.Info("Servers", "UDP Server started");
-
-            IPEndPoint ep = null;
-
-            int receivedCount = 0;
 
             while (shouldRun)
             {
-                String rdata = Encoding.ASCII.GetString(udpc.Receive(ref ep));
-
-                receivedCount++;
-
-                var response = KontrolBrain.Instance.CreateAndHandleRequest(Encoding.ASCII.GetBytes(rdata), rdata.Length, ep);
-
-                var responseBytes = Encoding.ASCII.GetBytes(response.ToString());
-
-                udpc.Send(responseBytes, responseBytes.Length, ep);
+                IPEndPoint ep = null;
+                var rdata = udpc.Receive(ref ep);
+                new Thread(new ParameterizedThreadStart(processRequest)).Start(new object[] { rdata, ep });
             }
         }
+
+        /// <summary>
+        /// Processing the request in a different thread
+        /// </summary>
+        /// <param name="data"></param>
+        private void processRequest(object data)
+        {
+            var parameters = (object[])data;
+            var response = KontrolBrain.Instance.CreateAndHandleRequest((byte[])parameters[0], ((byte[])parameters[0]).Length, (IPEndPoint)parameters[1]);
+
+            if (LogRequests)
+            {
+                lock (typeof(Console))
+                {
+                    Console.WriteLine("UDP Request---------------------------------------------------------------------");
+                    Console.WriteLine("Request body:");
+                    Console.WriteLine(Encoding.ASCII.GetString((byte[])parameters[0]));
+                    Console.WriteLine();
+                    Console.WriteLine("Response:");
+                    Console.WriteLine(response.ToString());
+                    Console.WriteLine("--------------------------------------------------------------------------------\n");
+                }
+            }
+        }
+
+        public bool LogRequests { get; set; }
     }
 }

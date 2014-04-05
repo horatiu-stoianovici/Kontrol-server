@@ -18,8 +18,12 @@ namespace Kontrol.Components
             {
                 return new List<IServer>()
                 {
-                    new TCPServer(),
-                    new UDPServer()
+                    new TCPServer(){
+                        LogRequests = true
+                    },
+                    new UDPServer(){
+                        LogRequests = true
+                    }
                 };
             }
         }

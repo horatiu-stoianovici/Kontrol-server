@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
-using System.Net.NetworkInformation;
 
 namespace Kontrol.Components
 {
@@ -68,17 +68,6 @@ namespace Kontrol.Components
         }
 
         /// <summary>
-        /// If the server needs a password for authentication
-        /// </summary>
-        public static bool RequiresPassword
-        {
-            get
-            {
-                return Kontrol.Properties.Settings.Default.requiresPassword;
-            }
-        }
-
-        /// <summary>
         /// the name of the PC
         /// </summary>
         public static string HostName
@@ -97,11 +86,12 @@ namespace Kontrol.Components
 
                 foreach (var interf in interfaces)
                 {
-                    if(interf.OperationalStatus == OperationalStatus.Up)
+                    if (interf.OperationalStatus == OperationalStatus.Up)
                         switch (interf.NetworkInterfaceType)
                         {
                             case NetworkInterfaceType.Wireless80211:
                                 return NetworkDevice.WiFi;
+
                             default:
                                 return NetworkDevice.Cable;
                         }

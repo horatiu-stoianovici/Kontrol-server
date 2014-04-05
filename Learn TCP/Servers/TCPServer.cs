@@ -1,7 +1,6 @@
 ﻿using Kontrol.Components;
 using Kontrol.Servers;
 using Kontrol.Utils;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +9,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 
 namespace Kontrol.Servers
 {
@@ -79,6 +79,19 @@ namespace Kontrol.Servers
                     shouldKeepConnectionAlive = true;
 
                     Response response = KontrolBrain.Instance.CreateAndHandleRequest(receivedBytes, amountOfReceivedBytes, mySocket.RemoteEndPoint as IPEndPoint);
+                    if (LogRequests)
+                    {
+                        lock (typeof(Console))
+                        {
+                            Console.WriteLine("TCP Request---------------------------------------------------------------------");
+                            Console.WriteLine("Request body:");
+                            Console.WriteLine(Encoding.ASCII.GetString(receivedBytes, 0, amountOfReceivedBytes));
+                            Console.WriteLine();
+                            Console.WriteLine("Response:");
+                            Console.WriteLine(response.ToString());
+                            Console.WriteLine("--------------------------------------------------------------------------------\n");
+                        }
+                    }
 
                     var responseText = response.ToString();
                     mySocket.Send(Encoding.ASCII.GetBytes(response.ToString() + "\n"), responseText.Length + 1, SocketFlags.None);
@@ -107,20 +120,20 @@ namespace Kontrol.Servers
             {
                 UdpClient publisher = new UdpClient("234.6.7.2", HostInfo.PORT);
 
-                byte[] sdata = Encoding.ASCII.GetBytes(HostInfo.IpAddressString + "~" + HostInfo.HostName + "~" + (HostInfo.RequiresPassword ? 1 : 0).ToString() + "~" + ((int)HostInfo.Device).ToString() + "~" + HostInfo.HostId);
+                byte[] sdata = Encoding.ASCII.GetBytes(Json.Encode(
+                    new
+                    {
+                        IPAddress = HostInfo.IpAddressString,
+                        HostName = HostInfo.HostName,
+                        Device = (int)HostInfo.Device,
+                        HostId = HostInfo.HostId
+                    }));
                 publisher.Send(sdata, sdata.Length);
 
                 Thread.Sleep(2000);
             }
         }
 
-        internal string SimulateCommand(string requestText, IPEndPoint endPoint = null)
-        {
-            endPoint = new IPEndPoint(HostInfo.IpAddress, HostInfo.PORT);
-
-            var response = KontrolBrain.Instance.CreateAndHandleRequest(Encoding.ASCII.GetBytes(requestText), requestText.Length, endPoint);
-
-            return response.ToString();
-        }
+        public bool LogRequests { get; set; }
     }
 }
