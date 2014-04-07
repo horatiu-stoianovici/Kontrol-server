@@ -93,9 +93,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\KeyboardCommand.cs" />
+    <Compile Include="Commands\PresentationCommand.cs" />
     <Compile Include="Commands\ScrollCommand.cs" />
     <Compile Include="Commands\MouseClickCommand.cs" />
     <Compile Include="Commands\MouseMoveCommand.cs" />
+    <Compile Include="Commands\VirualKeyCode.cs" />
     <Compile Include="Components\IKontrolRunnerConfig.cs" />
     <Compile Include="Components\KontrolRunner.cs" />
     <Compile Include="Components\KontrolRunnerDefaultConfig.cs" />

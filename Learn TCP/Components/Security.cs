@@ -21,21 +21,50 @@ namespace Kontrol.Security
         /// <returns></returns>
         public static bool IsAuthorized(string macAddress)
         {
-            if (Settings.Default.authorizedMACs == null)
+            var settings = Settings.Default;
+            if (settings.authorizedMACs == null)
             {
-                Settings.Default.authorizedMACs = new StringCollection();
-                Settings.Default.Save();
+                settings.authorizedMACs = new StringCollection();
+                settings.Save();
+            }
+            //if the mac was not authorized before, check if it was denied before
+            if (!settings.authorizedMACs.Contains(macAddress))
+            {
+                if (settings.notAuthorizedMACs == null)
+                {
+                    settings.notAuthorizedMACs = new StringCollection();
+                    settings.Save();
+                }
+                if (!settings.notAuthorizedMACs.Contains(macAddress))
+                {
+                    return promptUserToAuthorizeMAC(macAddress);
+                }
             }
             return Settings.Default.authorizedMACs.Contains(macAddress);
         }
 
         /// <summary>
-        /// Adds a mac address to the list of authorized devices
+        /// Prompts the user to authorize or revoke authorization for a phone
         /// </summary>
-        public static void AuthorizeClient(string macAddress)
+        /// <param name="macAddress">The mac address of the phone</param>
+        private static bool promptUserToAuthorizeMAC(string macAddress)
         {
-            Settings.Default.authorizedMACs.Add(macAddress);
-            Settings.Default.Save();
+            lock (typeof(Console))
+            {
+                Console.WriteLine("A phone with MAC address '{0}' is trying to get your permission to control this computer. Do you want to allow it?\nY/N", macAddress);
+                if (Console.ReadLine().ToLower() == "y")
+                {
+                    Settings.Default.authorizedMACs.Add(macAddress);
+                    Settings.Default.Save();
+                    return true;
+                }
+                else
+                {
+                    Settings.Default.notAuthorizedMACs.Add(macAddress);
+                    Settings.Default.Save();
+                    return false;
+                }
+            }
         }
     }
 }

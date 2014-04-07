@@ -6,6 +6,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 namespace Kontrol
 {
@@ -18,7 +19,7 @@ namespace Kontrol
             KontrolRunner.Instance.Run();
 
             Console.WriteLine("Kontrol server started on {0}", HostInfo.IpAddressString);
-            Console.ReadLine();
+            Thread.Sleep(TimeSpan.FromDays(1));
         }
     }
 }

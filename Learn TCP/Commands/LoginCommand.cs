@@ -23,11 +23,6 @@ namespace Kontrol.Commands
 
             if (!SecurityManager.IsAuthorized(request.MACAddress))
             {
-                //TODO: remove this in release
-                SecurityManager.AuthorizeClient(request.MACAddress);
-                response.StatusCode = TCPStatusCodes.Ok;
-                Log.Info("Security", "Use authorised successfully with MAC " + request.MACAddress);
-                return response;
                 response.StatusCode = TCPStatusCodes.NotAuthorized;
                 Log.Info("Security", "Authorization attempt failed from MAC " + request.MACAddress);
             }

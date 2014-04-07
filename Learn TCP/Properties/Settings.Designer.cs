@@ -45,5 +45,16 @@ namespace Kontrol.Properties {
                 this["authorizedMACs"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection notAuthorizedMACs {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["notAuthorizedMACs"]));
+            }
+            set {
+                this["notAuthorizedMACs"] = value;
+            }
+        }
     }
 }
