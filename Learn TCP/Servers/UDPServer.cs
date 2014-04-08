@@ -60,16 +60,7 @@ namespace Kontrol.Servers
 
             if (LogRequests)
             {
-                lock (typeof(Console))
-                {
-                    Console.WriteLine("UDP Request---------------------------------------------------------------------");
-                    Console.WriteLine("Request body:");
-                    Console.WriteLine(Encoding.ASCII.GetString((byte[])parameters[0]));
-                    Console.WriteLine();
-                    Console.WriteLine("Response:");
-                    Console.WriteLine(response.ToString());
-                    Console.WriteLine("--------------------------------------------------------------------------------\n");
-                }
+                //TODO maybe log requests
             }
         }
 

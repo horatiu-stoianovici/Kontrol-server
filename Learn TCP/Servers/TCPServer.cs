@@ -81,16 +81,7 @@ namespace Kontrol.Servers
                     Response response = KontrolBrain.Instance.CreateAndHandleRequest(receivedBytes, amountOfReceivedBytes, mySocket.RemoteEndPoint as IPEndPoint);
                     if (LogRequests)
                     {
-                        lock (typeof(Console))
-                        {
-                            Console.WriteLine("TCP Request---------------------------------------------------------------------");
-                            Console.WriteLine("Request body:");
-                            Console.WriteLine(Encoding.ASCII.GetString(receivedBytes, 0, amountOfReceivedBytes));
-                            Console.WriteLine();
-                            Console.WriteLine("Response:");
-                            Console.WriteLine(response.ToString());
-                            Console.WriteLine("--------------------------------------------------------------------------------\n");
-                        }
+                        //TODO maybe log requests
                     }
 
                     var responseText = response.ToString();

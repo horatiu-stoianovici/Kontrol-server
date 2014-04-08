@@ -43,5 +43,22 @@ namespace Kontrol.Components
                 };
             }
         }
+
+        private ISecurityPrompter prompter = null;
+
+        public ISecurityPrompter Prompter
+        {
+            get
+            {
+                if (prompter == null)
+                    prompter = new DefaultSecurityPrompter();
+                return prompter;
+            }
+
+            set
+            {
+                prompter = value;
+            }
+        }
     }
 }

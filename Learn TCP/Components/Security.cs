@@ -49,21 +49,17 @@ namespace Kontrol.Security
         /// <param name="macAddress">The mac address of the phone</param>
         private static bool promptUserToAuthorizeMAC(string macAddress)
         {
-            lock (typeof(Console))
+            if (KontrolRunner.Instance.Config.Prompter.PropmptUserToAuthorizeMAC(macAddress))
             {
-                Console.WriteLine("A phone with MAC address '{0}' is trying to get your permission to control this computer. Do you want to allow it?\nY/N", macAddress);
-                if (Console.ReadLine().ToLower() == "y")
-                {
-                    Settings.Default.authorizedMACs.Add(macAddress);
-                    Settings.Default.Save();
-                    return true;
-                }
-                else
-                {
-                    Settings.Default.notAuthorizedMACs.Add(macAddress);
-                    Settings.Default.Save();
-                    return false;
-                }
+                Settings.Default.authorizedMACs.Add(macAddress);
+                Settings.Default.Save();
+                return true;
+            }
+            else
+            {
+                Settings.Default.notAuthorizedMACs.Add(macAddress);
+                Settings.Default.Save();
+                return false;
             }
         }
     }

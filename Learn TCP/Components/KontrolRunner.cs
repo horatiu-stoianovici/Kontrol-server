@@ -16,6 +16,18 @@ namespace Kontrol.Components
         private List<IServer> servers = new List<IServer>();
         private IKontrolRunnerConfig config = new KontrolRunnerDefaultConfig();
 
+        /// <summary>
+        /// The configuration that is used for running
+        /// The only thing you can change is the security prompter
+        /// </summary>
+        public IKontrolRunnerConfig Config
+        {
+            get
+            {
+                return config;
+            }
+        }
+
         private KontrolRunner()
         {
         }

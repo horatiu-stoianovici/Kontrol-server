@@ -18,5 +18,10 @@ namespace Kontrol.Components
         /// The commands that can be executed
         /// </summary>
         List<ICommand> Commands { get; }
+
+        /// <summary>
+        /// The prompter used to prompt the user when someone tries to connect to the server and is not yet authorized
+        /// </summary>
+        ISecurityPrompter Prompter { get; set; }
     }
 }
