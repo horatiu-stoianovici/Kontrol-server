@@ -38,7 +38,8 @@ namespace Kontrol.Components
                     new MouseMoveCommand(),
                     new MouseClickCommand(),
                     new ScrollCommand(),
-                    new KeyboardCommand()
+                    new KeyboardCommand(),
+                    new PresentationCommand()
                 };
             }
         }
