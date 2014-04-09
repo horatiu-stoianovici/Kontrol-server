@@ -124,9 +124,9 @@ namespace Kontrol.Components
         {
             if (RequestedCommandName.ToUpper() != "AUTHORIZE")
             {
-                bool auth = SecurityManager.IsAuthorized(macAddress);
+                bool auth = SecurityManager.Instance.IsAuthorized(macAddress);
                 if (!auth)
-                    Log.Info("Security", "Attepmpt to execute a command without being authorized from ip " + ClientEndPoint.Address.ToString() + " with mac " + macAddress);
+                    Log.Info("Security", "Attempt to execute a command without being authorized : MAC = " + macAddress);
                 return auth;
             }
             return true;

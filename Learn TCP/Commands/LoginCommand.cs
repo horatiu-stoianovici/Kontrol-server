@@ -21,7 +21,7 @@ namespace Kontrol.Commands
             Response response = new Response();
             response.StatusCode = TCPStatusCodes.Ok;
 
-            if (!SecurityManager.IsAuthorized(request.MACAddress))
+            if (!SecurityManager.Instance.IsAuthorized(request.MACAddress))
             {
                 response.StatusCode = TCPStatusCodes.NotAuthorized;
                 Log.Info("Security", "Authorization attempt failed from MAC " + request.MACAddress);
