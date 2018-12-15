@@ -1,11 +1,12 @@
 ﻿using Kontrol.Security;
 using Kontrol.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Web.Helpers;
 
 namespace Kontrol.Components
 {
@@ -45,7 +46,7 @@ namespace Kontrol.Components
 
             try
             {
-                JsonDataHolder req = Json.Decode<JsonDataHolder>(_requestText);
+                JsonDataHolder req = JsonConvert.DeserializeObject<JsonDataHolder>(_requestText);
 
                 macAddress = req.MACAddress;
                 parameters = new List<String>(req.Parameters);
@@ -68,7 +69,7 @@ namespace Kontrol.Components
         internal Request(byte[] receivedBytes, int nrOfReceivedBytes, EndPoint endPoint)
         {
             _requestText = Encoding.ASCII.GetString(receivedBytes, 0, nrOfReceivedBytes);
-            dynamic req = Json.Decode(_requestText);
+            dynamic req = JsonConvert.DeserializeObject<ExpandoObject>(_requestText);
 
             macAddress = req.MACAddress;
             parameters = req.Parameters;

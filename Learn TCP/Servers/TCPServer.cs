@@ -1,6 +1,7 @@
 ﻿using Kontrol.Components;
 using Kontrol.Servers;
 using Kontrol.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Helpers;
 
 namespace Kontrol.Servers
 {
@@ -111,7 +111,7 @@ namespace Kontrol.Servers
             {
                 UdpClient publisher = new UdpClient("234.6.7.2", HostInfo.PORT);
 
-                byte[] sdata = Encoding.ASCII.GetBytes(Json.Encode(
+                byte[] sdata = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(
                     new
                     {
                         IPAddress = HostInfo.IpAddressString,

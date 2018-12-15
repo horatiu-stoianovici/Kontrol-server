@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web.Helpers;
 
 namespace Kontrol.Components
 {
@@ -40,7 +40,7 @@ namespace Kontrol.Components
         /// </summary>
         public override string ToString()
         {
-            return Json.Encode(new
+            return JsonConvert.SerializeObject(new
             {
                 StatusCode = (int)StatusCode,
                 Content = responseContent.ToString()
